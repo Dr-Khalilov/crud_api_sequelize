@@ -59,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           isDate: true,
           isCorrectDate (value) {
-            if (isAfter(new Date(), new Date(value))) {
+            if (isAfter(new Date(value), new Date())) {
               throw new Error('Enter a valid date');
             }
           },

@@ -21,9 +21,31 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      model: DataTypes.STRING,
-      price: DataTypes.DECIMAL,
-      color: DataTypes.STRING,
+      model: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          notNull: true,
+          notEmpty: true,
+        },
+      },
+      price: {
+        type: DataTypes.DECIMAL,
+        allowNull: false,
+        validate: {
+          notNull: true,
+          notEmpty: true,
+        },
+      },
+      color: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: true,
+          notEmpty: true,
+        },
+      },
     },
     {
       sequelize,
