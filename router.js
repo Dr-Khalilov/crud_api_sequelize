@@ -10,6 +10,7 @@ router.post('/user', UserController.createUser);
 router.patch('/user/:id', UserController.updateUser);
 router.patch('/user-v2/:id', checkUser, UserController.updatedUserInstance);
 router.delete('/user/:id', UserController.deleteUser);
+router.get('/user-1/:id', UserController.getUser);
 
 router.post('/user/:id/task', TaskController.createTask);
 router.get('/user/:id/task', checkUser, TaskController.getUserTasks);

@@ -11,6 +11,22 @@ module.exports.createUser = async (req, res, next) => {
   }
 };
 
+module.exports.getUser = async (req, res, next) => {
+  try {
+    const {
+      params: { id },
+    } = req;
+    const user = await User.findByPk(id);
+    if (!user) {
+      throw new Error('404. User not found');
+    }
+
+    res.status(200).send({ data: user });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports.getAllUsers = async (req, res, next) => {
   try {
     const users = await User.findAll({
