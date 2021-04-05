@@ -3,7 +3,9 @@ const { Model } = require('sequelize');
 const { isAfter } = require('date-fns');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    static associate (models) {}
+    static associate (models) {
+      User.hasMany(models.Task, { foreignKey: 'userId' });
+    }
   }
   User.init(
     {
