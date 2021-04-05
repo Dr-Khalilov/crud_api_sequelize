@@ -1,10 +1,14 @@
-const { OP } = require('sequelize');
+const createError = require('http-error');
 const { User } = require('../models');
 
 module.exports.createUser = async (req, res, next) => {
   try {
     const { body } = req;
     const createdUser = await User.create(body);
+    if (!createdUser) {
+      const err = createUser(204, 'No Content');
+      return next(err);
+    }
     res.status(201).send({ data: createdUser });
   } catch (err) {
     next(err);
@@ -18,7 +22,8 @@ module.exports.getUser = async (req, res, next) => {
     } = req;
     const user = await User.findByPk(id);
     if (!user) {
-      throw new Error('404. User not found');
+      const err = createError(404, 'User not found');
+      return next(err);
     }
 
     res.status(200).send({ data: user });
@@ -34,6 +39,10 @@ module.exports.getAllUsers = async (req, res, next) => {
         exclude: ['password'],
       },
     });
+    if (!users.length) {
+      const err = createError(404, 'Users not found');
+      return next(err);
+    }
     res.status(200).send({ data: users });
   } catch (err) {
     next(err);
@@ -47,10 +56,14 @@ module.exports.updateUser = async (req, res, next) => {
       params: { id },
     } = req;
 
-    const [, [updatedUser]] = await User.update(body, {
+    const [rows, [updatedUser]] = await User.update(body, {
       where: { id },
       returning: true,
     });
+    if (rows !==1) {
+      const err = createError(404, 'Users not found');
+      return next(err);
+    }
     updatedUser.password = undefined;
     res.status(200).send({ data: updatedUser });
   } catch (err) {
@@ -81,7 +94,8 @@ module.exports.deleteUser = async (req, res, next) => {
       where: { id },
     });
     if (affectedUser === 0) {
-      throw new Error('User not found');
+      const err = createError(404, 'User not found');
+      return next(err);
     }
     res.status(200).send({ data: affectedUser });
   } catch (err) {
